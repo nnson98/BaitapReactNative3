@@ -1,5 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, Image} from 'react-native';
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ImageBackground
+} from 'react-native';
+import { MaterialIcons,Entypo } from '@expo/vector-icons';
 import Card from '../shared/card';
 export default function ReviewDetails({navigation,route}){
 /*const pressHandler=()=>{
@@ -12,42 +20,96 @@ export default function ReviewDetails({navigation,route}){
     
 
     return(
-        <View style={styles.contaner} >
-          <Card>
-            <View style={styles.img}>
-              <Image style={styles.avatar} source={{uri:avatar}} />
+        <View style={styles.container}>
+          <ImageBackground style={styles.header} source={{uri:'https://khunganhonline.com/uploads/worigin/2019/07/02/anh-bia-thang-7-hello-july-25d1aafa5a6a27_4fc38a4bf5ddb1c9f9383526ac87a0d3.jpg'}}>
+          <TouchableOpacity >
+          <MaterialIcons name='menu' size={28}  style={styles.icon} />
+          </TouchableOpacity>
+          <Image style={styles.avatar} source={{uri: avatar}}/>
+          </ImageBackground>
+          <View style={styles.body}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.name}>{first_name} {last_name}</Text>
+              <Text style={styles.info}>Pied Piper</Text>
+              <TouchableOpacity style={styles.buttonContainer}>
+                <MaterialIcons name='email' size={18} color='#333'/>
+            <Text style={styles.itemText}>{email}</Text>
+              </TouchableOpacity>              
+              <TouchableOpacity style={styles.buttonContainer}>
+              <Entypo name='facebook' size={18} color='#333'/>
+            <Text style={styles.itemText}>{first_name}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonContainer}>
+              <MaterialIcons name='call' size={18} color='#333'/>
+            <Text style={styles.itemText}>0944705204</Text> 
+              </TouchableOpacity>
             </View>
-            <Text style={styles.text}>Email : {email}</Text>
-            <Text style={styles.text}>First Name : {first_name}</Text>
-            <Text style={styles.text}>Last Name: {last_name}</Text>
-            </Card>
-          
         </View>
+      </View>
     )
 }
 const styles = StyleSheet.create({
-  contaner:{
-      flex:1,
-      padding:10,
-  },
-  img:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:16,
-    marginTop:16,
-    borderTopWidth:1,
-    borderTopColor:'#eee',
-  },
-  avatar:{
-    width:200,
+  header:{
+    
     height:200,
-    borderRadius:200/2
-  }
-  ,
-  text:{
-    fontSize:18,
-    textAlign:'center',
-    margin:30
-  }
-})
+  },
+
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    marginBottom:10,
+    alignSelf:'center',
+    position: 'absolute',
+    marginTop:130
+  },
+  name:{
+    fontSize:22,
+    color:"#FFFFFF",
+    fontWeight:'600',
+  },
+  body:{
+    marginTop:40,
+  },
+  bodyContent: {
+    flex: 1,
+    alignItems: 'center',
+    padding:30,
+  },
+  name:{
+    fontSize:28,
+    color: "#696969",
+    fontWeight: "600"
+  },
+  info:{
+    fontSize:16,
+    color: "#00BFFF",
+    marginTop:10
+  },
+  description:{
+    fontSize:16,
+    color: "#696969",
+    marginTop:10,
+    textAlign: 'center'
+  },
+  buttonContainer: {
+    height:45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:10,
+    width:250,
+    borderRadius:30,
+  
+  },
+  itemText:{
+    marginLeft:10,
+},
+icon:{
+  position:'absolute',
+  right:16
+},
+});
 
