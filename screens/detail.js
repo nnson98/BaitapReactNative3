@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   ImageBackground
 } from 'react-native';
+import {  Icon } from 'native-base';
 import { MaterialIcons,Entypo } from '@expo/vector-icons';
-import Card from '../shared/card';
 export default function ReviewDetails({navigation,route}){
 /*const pressHandler=()=>{
     navigation.goBack();

@@ -12,63 +12,107 @@ export default class Home extends Component{
       page:1,
       isLoading:false,
       error:null,
-      query:""
+      query:"",
+      refreshing : false
+      
     }
   }
   componentDidMount(){
-    this.setState({isLoading:true},this.getData)
+    this.getData();
     
   }
-  getData = _.debounce(() =>{
-    const api = "https://reqres.in/api/users?page="+this.state.page;
+  
+  getData = () =>{
+    this.setState({isLoading:true})
+    const { page} = this.state;
+    const api = "https://reqres.in/api/users?page="+page;
     fetch(api).then((res) => res.json())
     .then((resJson)=>{
       this.setState({
+        isLoading:false,
         data:this.state.data.concat(resJson.data),
         fulldata:this.state.data.concat(resJson.data),
-        isLoading:false
+        refreshing : false
+        
       })
     }).catch(error =>{
-      this.setState({error,isLoading:false})
+      this.setState({error,isLoading:false,refreshing:false})
     })
-  },250)
-
-  handleLoadMore=()=>{
-    this.setState ({page:this.state.page+1},this.getData)
   }
+
+  handleLoadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1,
+        refreshing: true
+      },
+      ()=>
+        this.getData()
+      
+    );
+  
+    
+  }
+  renderSeparator = () => {
+    return (
+      <View
+        style={
+          styles.viewSeparator
+        }
+      />
+    );
+  };
   renderFooter=()=>{
     if(!this.state.isLoading) return null
     return(
-      <View style={{paddingVertical:20,borderTopWidth:1,borderColor:'#CED0CE'}}>
+      <View style={styles.viewFooter}>
           <ActivityIndicator animating size="large"/>
       </View>
     )
   }
+  renderHeader = () => {
+    return <Header searchBar rounded>
+    <Item>
+      <Icon name="ios-search" />
+      <Input placeholder="Search" onChangeText={this.handleSreach}/>
+    </Item>
+
+  </Header> ;
+  };
+  handleRefresh = () => {
+    this.setState(
+      {
+        page: this.state.page + 1,
+        refreshing: true
+      },
+      () => {
+        this.getData();
+      }
+    );
+  };
+  
   
   handleSreach = (text) =>{
-    const formattedQuery=text.toLowerCase()
+    const formatQuery=text.toLowerCase()
     const data=_.filter(this.state.fulldata, data =>{
-      if(data.email.includes(formattedQuery)){
+      if(data.email.includes(formatQuery)){
         return true
-      }else false
+      }else 
+        false
+      
     })
-    this.setState({data , query:text})
+    this.setState ({data,query:text})
+  
+  
   }
+    
+  
 
   render(){
     const {navigation} = this.props;
     return(
       <Container>
-        <Header searchBar rounded>
-          <Item>
-            <Icon name="ios-search" />
-            <Input placeholder="Search" onChangeText={this.handleSreach}/>
-            <Icon name="ios-people" />
-          </Item>
-          <Button transparent>
-            <Text>Search</Text>
-          </Button>
-        </Header>
+        
         <List >
         <FlatList 
       data={this.state.data}
@@ -86,10 +130,15 @@ export default class Home extends Component{
               </Right>
       </ListItem>
       )}
-      keyExtractor={(item,index)=>index.toString()}
-      onEndReached={this.handleLoadMore}
-      onEndReachedThreshold={50}
+      keyExtractor={(item)=>item.email}
+      ItemSeparatorComponent={this.renderSeparator}
+      ListHeaderComponent={this.renderHeader}
       ListFooterComponent={this.renderFooter}
+      refreshing={this.state.refreshing}
+      onRefresh={this.handleRefresh}
+      //onEndReached={this.handleLoadMore}
+      //onEndReachedThreshold={50}
+      
       /> 
            
           </List>
@@ -98,4 +147,16 @@ export default class Home extends Component{
   
       )}
 }
+
+const styles = StyleSheet.create({
+  viewSeparator:{
+    height: 1,
+    width: "86%",
+    backgroundColor: "#CED0CE",
+    marginLeft: "14%"
+  },
+  viewFooter:{
+    paddingVertical:20,borderTopWidth:1,borderColor:'#CED0CE'
+  }
+});
 
