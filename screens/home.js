@@ -1,5 +1,5 @@
 import React ,{Component} from 'react';
-import {StyleSheet,FlatList,View,ActivityIndicator} from 'react-native';
+import {StyleSheet,FlatList,View,ActivityIndicator,TouchableNativeFeedback,Keyboard} from 'react-native';
 import {  Item, Input, Icon, Button,  Container, Header,
    Content, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 import _ from 'lodash';
@@ -41,15 +41,17 @@ export default class Home extends Component{
   }
 
   handleLoadMore = () => {
-    this.setState(
-      {
-        page: this.state.page + 1,
-        refreshing: true
-      },
-      ()=>
-        this.getData()
-      
-    );
+      return (this.setState(
+        {
+          page: this.state.page + 1,
+          refreshing: true
+        },
+        ()=>
+          this.getData()
+        
+      ))
+    
+    
   
     
   }
@@ -83,7 +85,7 @@ export default class Home extends Component{
     this.setState(
       {
         page: this.state.page + 1,
-        refreshing: true
+        isLoading:false
       },
       () => {
         this.getData();
@@ -93,24 +95,23 @@ export default class Home extends Component{
   
   
   handleSreach = (text) =>{
-    const formatQuery=text.toLowerCase()
-    const data=_.filter(this.state.fulldata, data =>{
-      if(data.email.includes(formatQuery)){
-        return true
-      }else 
-        false
       
-    })
-    this.setState ({data,query:text})
-  
-  
+        const formatQuery=text.toLowerCase()
+      const data=_.filter(this.state.fulldata, data =>{
+        if(data.email.includes(formatQuery)){
+          return true
+        }else 
+          false
+      })
+      this.setState ({data,query:text})
   }
-    
+  
   
 
   render(){
     const {navigation} = this.props;
     return(
+      
       <Container>
         
         <List >
@@ -134,17 +135,21 @@ export default class Home extends Component{
       ItemSeparatorComponent={this.renderSeparator}
       ListHeaderComponent={this.renderHeader}
       ListFooterComponent={this.renderFooter}
-      refreshing={this.state.refreshing}
-      onRefresh={this.handleRefresh}
-      //onEndReached={this.handleLoadMore}
-      //onEndReachedThreshold={50}
+     // refreshing={this.state.refreshing}
+     //onRefresh={this.handleRefresh}
+     onEndReachedThreshold={0,1}
+     onEndReached={(x)=>this.handleLoadMore()}
+     
+     
+    
+     
       
       /> 
            
           </List>
-        
+         
       </Container>
-  
+      
       )}
 }
 

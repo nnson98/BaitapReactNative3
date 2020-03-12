@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {  Icon } from 'native-base';
 import { MaterialIcons,Entypo } from '@expo/vector-icons';
+import Communication from 'react-native-communications';
 export default function ReviewDetails({navigation,route}){
 /*const pressHandler=()=>{
     navigation.goBack();
@@ -31,15 +32,15 @@ export default function ReviewDetails({navigation,route}){
             <View style={styles.bodyContent}>
               <Text style={styles.name}>{first_name} {last_name}</Text>
               <Text style={styles.info}>Pied Piper</Text>
-              <TouchableOpacity style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.buttonContainer} onPress={()=>Communication.email([email,''],null,null,'My Subject','My body text')} >
                 <MaterialIcons name='email' size={18} color='#333'/>
             <Text style={styles.itemText}>{email}</Text>
               </TouchableOpacity>              
-              <TouchableOpacity style={styles.buttonContainer}>
-              <Entypo name='facebook' size={18} color='#333'/>
+              <TouchableOpacity style={styles.buttonContainer} onPress={() => Communication.web('https://www.facebook.com/groups/669915249871846/')}>
+              <Entypo name='facebook' size={18} color='#333' />
             <Text style={styles.itemText}>{first_name}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.buttonContainer} onPress={()=>Communication.phonecall('0944705204',true)}>
               <MaterialIcons name='call' size={18} color='#333'/>
             <Text style={styles.itemText}>0944705204</Text> 
               </TouchableOpacity>
