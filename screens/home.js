@@ -7,13 +7,14 @@ export default class Home extends Component{
   constructor(props){
     super(props)
     this.state={
-      data:[],
-      fulldata:[],
-      page:1,
-      isLoading:false,
-      error:null,
-      query:"",
-      refreshing : false
+      data: [],
+      fulldata: [],
+      page: 1,
+      allowLoadMore: false,
+      isLoading: false,
+      error: null,
+      query: "",
+      refreshing: false
       
     }
   }
@@ -33,23 +34,25 @@ export default class Home extends Component{
         data:this.state.data.concat(resJson.data),
         fulldata:this.state.data.concat(resJson.data),
         refreshing : false
-        
-      })
+        },);
+        resJson.data.length == 6
+          ? this.setState({ allowLoadMore: true })
+          : this.setState({ allowLoadMore: false });
     }).catch(error =>{
       this.setState({error,isLoading:false,refreshing:false})
     })
   }
 
   handleLoadMore = () => {
-      return (this.setState(
+    if (this.state.allowLoadMore == true) {
+      this.setState(
         {
-          page: this.state.page + 1,
-          refreshing: true
+          page: this.state.page + 1
+          
         },
-        ()=>
-          this.getData()
-        
-      ))
+        () => this.getData()
+      );
+    }
     
     
   
@@ -84,8 +87,10 @@ export default class Home extends Component{
   handleRefresh = () => {
     this.setState(
       {
-        page: this.state.page + 1,
-        isLoading:false
+        data: [],
+        fulldata: [],
+        page: 1,
+        refreshing: true
       },
       () => {
         this.getData();
@@ -135,10 +140,10 @@ export default class Home extends Component{
       ItemSeparatorComponent={this.renderSeparator}
       ListHeaderComponent={this.renderHeader}
       ListFooterComponent={this.renderFooter}
-     // refreshing={this.state.refreshing}
-     //onRefresh={this.handleRefresh}
-     onEndReachedThreshold={0,1}
-     onEndReached={(x)=>this.handleLoadMore()}
+     refreshing={this.state.refreshing}
+     onRefresh={this.handleRefresh}
+     onEndReachedThreshold={1}
+     onEndReached={this.handleLoadMore}
      
      
     
